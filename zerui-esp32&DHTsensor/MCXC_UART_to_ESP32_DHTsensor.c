@@ -110,20 +110,6 @@ void sendMessage(const char *msg)
 }
 
 // ───────────────────────────────────────────────
-// Parse JSON {"temp":27.5,"humidity":62.0}
-// ───────────────────────────────────────────────
-void parseJSON(const char *json, float *temp, float *hum)
-{
-    const char *tp = strstr(json, "\"temp\":");
-    const char *hp = strstr(json, "\"humidity\":");
-    *temp = *hum = -99.0f;
-    if (tp)
-        *temp = atof(tp + 7);
-    if (hp)
-        *hum = atof(hp + 11);
-}
-
-// ───────────────────────────────────────────────
 // Task: Receive responses from ESP32
 // ───────────────────────────────────────────────
 static void recvTask(void *p)
@@ -133,11 +119,8 @@ static void recvTask(void *p)
     {
         if (xQueueReceive(queue, &msg, portMAX_DELAY) == pdTRUE)
         {
-            float t, h;
-            parseJSON(msg.message, &t, &h);
+            // Only print the raw JSON message from ESP32
             PRINTF("From ESP32: %s\r\n", msg.message);
-            if (t > -90 && h > -90)
-                printf("Temp: %.1f °C, Humidity: %.1f %%\r\n", t, h);
         }
     }
 }
