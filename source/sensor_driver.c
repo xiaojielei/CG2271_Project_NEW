@@ -8,6 +8,10 @@
 
 #include "sensor_driver.h"
 
+void ADC_Config(void);
+void init_WaterLevel_ISR(void);
+
+
 void Sensors_Init(void) {
    // Step 0: Enable clock for PORTE and PORTC
     SIM->SCGC5 |= SIM_SCGC5_PORTE_MASK;
@@ -29,12 +33,6 @@ void Sensors_Init(void) {
 
     // Step 4: Configure water level interrupt
     init_WaterLevel_ISR();
-
-    // Step 5: Perform sensor calibration
-    Calibrate_WaterLevel();
-
-    // Step 6: Perform self-test
-    Sensor_SelfTest();
 
     // Print initialization message
     #ifdef SENSOR_DEBUG
@@ -102,6 +100,7 @@ void init_WaterLevel_ISR(void) {
     NVIC_EnableIRQ(PORTA_IRQn);
 }
 
+//configure ADC for water level and read the analog value
 uint32_t Read_WaterLevel(void) {
     uint32_t adcValue;
     uint32_t waterLevelPercent;
@@ -150,32 +149,7 @@ uint32_t Read_Photoresistor(void) {
     return adcValue;
 }
 
-void Calibrate_WaterLevel(void) {
-    // This function should be called during system initialization
-    // For now, set default calibration values
-    // In a real system, you would take measurements with known water levels
-
-    water_level_dry = 850;    // Typical value when sensor is dry
-    water_level_wet = 3200;   // Typical value when sensor is fully submerged
-
-    photoresistor_dark = 100;     // Typical value in dark
-    photoresistor_bright = 3500;  // Typical value in bright light
-}
-
-void Sensor_SelfTest(void) {
-    uint32_t water_level = Read_WaterLevel();
-    uint32_t light_level = Read_Photoresistor();
-
-    // Check if sensors are responding within expected ranges
-    if (water_level > 100) {
-        // Sensor reading out of range - might be disconnected
-        // Handle error condition
-    }
-
-    if (light_level > 4095) {
-        // ADC reading out of range
-        // Handle error condition
-    }
-
-    // You can add more comprehensive self-test logic here
+// Function to get the last measured water level
+uint32_t Get_Last_WaterLevel(void) {
+    return last_water_level;
 }

@@ -65,8 +65,7 @@ source/sensor_driver.o source/sensor_driver.d: ../source/sensor_driver.c \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_clock.h \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_common.h \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_gpio.h \
- C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_port.h \
- C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_clock.h
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_port.h
 ../source/sensor_driver.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/FreeRTOS.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\template/FreeRTOSConfig.h:
@@ -134,4 +133,3 @@ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_clock.h
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_common.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_gpio.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_port.h:
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_clock.h:

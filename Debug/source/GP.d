@@ -72,8 +72,7 @@ source/GP.o source/GP.d: ../source/GP.c \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/queue.h \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/task.h \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/queue.h \
- C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_port.h \
- C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_clock.h
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_port.h
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\board/board.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\board/clock_config.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_common.h:
@@ -148,4 +147,3 @@ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-k
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/task.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/queue.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_port.h:
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_clock.h:

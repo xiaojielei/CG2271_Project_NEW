@@ -7,6 +7,10 @@
 
 #include "sensor_driver.h"
 
+uint32_t Get_Last_WaterLevel(void);
+uint32_t Read_WaterLevel(void);
+
+//Update last known water level
 void PORTA_IRQHandler(void) {
 
 	NVIC_ClearPendingIRQ(PORTA_IRQn);
@@ -52,18 +56,4 @@ void PORTA_IRQHandler(void) {
 	PORTA->ISFR |= (1 << WATER_LEVEL_PIN);
 }
 
-// Function to get the last measured water level
-uint32_t Get_Last_WaterLevel(void) {
-    return last_water_level;
-}
 
-// Function to manually trigger water level reading (for testing)
-void Trigger_WaterLevel_Reading(void) {
-    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-
-    if (xWaterLevelSemaphore != NULL) {
-        xSemaphoreGiveFromISR(xWaterLevelSemaphore, &xHigherPriorityTaskWoken);
-    }
-
-    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-}

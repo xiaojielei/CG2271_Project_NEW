@@ -1,6 +1,4 @@
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\CMSIS/core_cm0plus.h:848:22:__NVIC_ClearPendingIRQ	16	static
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_port.h:605:24:PORT_GetPinsInterruptFlags	16	static
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_port.h:616:20:PORT_ClearPinsInterruptFlags	16	static
-../source/water_level_isr.c:10:6:PORTA_IRQHandler	24	static
-../source/water_level_isr.c:56:10:Get_Last_WaterLevel	8	static
-../source/water_level_isr.c:61:6:Trigger_WaterLevel_Reading	16	static
+../source/water_level_isr.c:14:6:PORTA_IRQHandler	24	static
