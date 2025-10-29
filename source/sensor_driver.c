@@ -7,13 +7,6 @@
 
 
 #include "sensor_driver.h"
-#include "board.h"
-
-// Global variables for sensor calibration
-static uint32_t water_level_dry = 0;    // ADC value when dry
-static uint32_t water_level_wet = 4095; // ADC value when fully submerged
-static uint32_t photoresistor_dark = 0;
-static uint32_t photoresistor_bright = 4095;
 
 void Sensors_Init(void) {
    // Step 0: Enable clock for PORTE and PORTC

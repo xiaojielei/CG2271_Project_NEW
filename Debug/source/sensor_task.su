@@ -1,8 +1,8 @@
-../source/sensor_task.c:27:6:Sensor_Polling_Task	48	static
-../source/sensor_task.c:77:13:Read_All_Sensors	16	static
-../source/sensor_task.c:84:13:Process_Sensor_Data	24	static
-../source/sensor_task.c:112:13:Log_Sensor_Readings	16	static
-../source/sensor_task.c:129:6:Update_DHT11_Data	16	static
-../source/sensor_task.c:135:6:Get_Current_Sensor_Readings	16	static
-../source/sensor_task.c:142:9:Check_Plant_Needs_Attention	24	static
-../source/sensor_task.c:159:6:Create_Sensor_Task	16	static
+../source/sensor_task.c:16:6:Sensor_Polling_Task	48	static
+../source/sensor_task.c:66:13:Read_All_Sensors	16	static
+../source/sensor_task.c:73:13:Process_Sensor_Data	24	static
+../source/sensor_task.c:101:13:Log_Sensor_Readings	16	static
+../source/sensor_task.c:118:6:Update_DHT11_Data	16	static
+../source/sensor_task.c:124:6:Get_Current_Sensor_Readings	16	static
+../source/sensor_task.c:131:9:Check_Plant_Needs_Attention	24	static
+../source/sensor_task.c:148:6:Create_Sensor_Task	16	static

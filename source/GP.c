@@ -17,7 +17,6 @@
 #include "fsl_debug_console.h"
 /* TODO: insert other include files here. */
 #include "sensor_driver.h"
-#include "sensor_task.c"
 /* TODO: insert other definitions and declarations here. */
 
 /*
@@ -33,6 +32,11 @@ int main(void) {
     /* Init FSL debug console. */
     BOARD_InitDebugConsole();
 #endif
+
+    // Initialize FreeRTOS objects
+    xSensorQueue = xQueueCreate(10, sizeof(SensorData_t));
+    xWaterLevelSemaphore = xSemaphoreCreateBinary();
+    xUARTMutex = xSemaphoreCreateMutex();
 
     //Initialize sensors
     Sensors_Init();

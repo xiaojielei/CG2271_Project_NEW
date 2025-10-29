@@ -6,15 +6,6 @@
  */
 
 #include "sensor_driver.h"
-#include "FreeRTOS.h"
-#include "semphr.h"
-
-// External semaphore for water level interrupt
-extern SemaphoreHandle_t xWaterLevelSemaphore;
-
-// Water level state tracking
-extern uint32_t last_water_level = 0;
-extern TickType_t last_interrupt_time = 0;
 
 void PORTA_IRQHandler(void) {
 

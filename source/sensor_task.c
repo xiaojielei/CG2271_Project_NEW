@@ -8,17 +8,6 @@
 
 #include "sensor_driver.h"
 
-// External handles
-extern QueueHandle_t xSensorQueue;
-extern SemaphoreHandle_t xWaterLevelSemaphore;
-extern SemaphoreHandle_t xUARTMutex;
-
-// Task handle
-extern TaskHandle_t xSensorTaskHandle = NULL;
-
-// Sensor data storage
-static SensorData_t current_sensor_data;
-
 // Private function prototypes
 static void Read_All_Sensors(SensorData_t *data);
 static void Process_Sensor_Data(SensorData_t *data);

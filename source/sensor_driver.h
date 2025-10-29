@@ -19,6 +19,21 @@ typedef struct {
     TickType_t timestamp;
 } SensorData_t;
 
+//Global Variables
+extern uint32_t water_level_dry;
+extern uint32_t water_level_wet;
+extern uint32_t photoresistor_dark;
+extern uint32_t photoresistor_bright;
+
+extern QueueHandle_t xSensorQueue;
+extern SemaphoreHandle_t xWaterLevelSemaphore;
+extern SemaphoreHandle_t xUARTMutex;
+extern TaskHandle_t xSensorTaskHandle;
+
+extern uint32_t last_water_level;
+extern TickType_t last_interrupt_time;
+extern SensorData_t current_sensor_data;
+
 // Water Level Thresholds
 #define WATER_LEVEL_CRITICAL  20  // Below 20% - critical
 #define WATER_LEVEL_LOW       40  // Below 40% - low
@@ -52,5 +67,9 @@ uint32_t Get_Last_WaterLevel();
 
 // Interrupt Handler
 void PORTA_IRQHandler(void);
+
+void Create_Sensor_Task(void);
+void Sensor_Polling_Task(void *pvParameters);
+void Update_DHT11_Data(float temperature, float humidity);
 
 #endif /* SENSOR_DRIVER_H */
