@@ -1,0 +1,10 @@
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\CMSIS/core_cm0plus.h:757:22:__NVIC_EnableIRQ	16	static
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\CMSIS/core_cm0plus.h:848:22:__NVIC_ClearPendingIRQ	16	static
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\CMSIS/core_cm0plus.h:866:22:__NVIC_SetPriority	24	static
+../source/sensor_driver.c:18:6:Sensors_Init	8	static
+../source/sensor_driver.c:53:6:ADC_Config	8	static
+../source/sensor_driver.c:86:6:init_WaterLevel_ISR	8	static
+../source/sensor_driver.c:112:10:Read_WaterLevel	16	static
+../source/sensor_driver.c:141:10:Read_Photoresistor	16	static
+../source/sensor_driver.c:160:6:Calibrate_WaterLevel	8	static
+../source/sensor_driver.c:172:6:Sensor_SelfTest	16	static
