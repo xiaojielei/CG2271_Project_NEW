@@ -44,7 +44,7 @@ void initSensors(void) {
 	PORTC->PCR[WATER_LEVEL_PIN] |= PORT_PCR_MUX(0);
 
 	// Configure the ADC, Enable ADC interrupt
-	ADC0->SC1[0] |= ADC_SC1_AIEN_MASK;
+	ADC0->SC1[0] |= ADC_SC1_AIEN_MASK | ADC_SC1_ADCH(14);// Start interrupt-based conversion on channel 14 (PTC0)
 	ADC0->SC1[0] &= ~ADC_SC1_DIFF_MASK;
 	ADC0->SC1[0] |= ADC_SC1_DIFF(0b0);
 
@@ -74,7 +74,7 @@ void initSensors(void) {
 // Read by polling
 uint32_t ReadPhotoresistor() {
     ADC0->SC1[1] &= ~ADC_SC1_ADCH_MASK;
-    ADC0->SC1[1] |= ADC_SC1_ADCH(3);
+    ADC0->SC1[1] |= ADC_SC1_ADCH(3); //starts conversion
     while (!(ADC0->SC1[1] & ADC_SC1_COCO_MASK)) {}
     return ADC0->R[1];
 }
@@ -87,6 +87,9 @@ void ADC0_IRQHandler(void) {
         sensorData.water_level = ADC0->R[0];
         xSemaphoreGiveFromISR(xWaterLevelSemaphore, &hpw);
         portYIELD_FROM_ISR(hpw);
+
+        // Restart the interrupt-driven conversion
+        ADC0->SC1[0] = ADC_SC1_AIEN_MASK | ADC_SC1_ADCH(14);
     }
 }
 
