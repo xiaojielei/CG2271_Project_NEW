@@ -4,31 +4,19 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../source/GP.c \
-../source/global_definitions.c \
 ../source/mtb.c \
 ../source/semihost_hardfault.c \
-../source/sensor_driver.c \
-../source/sensor_task.c \
-../source/water_level_isr.c 
+../source/sensor.c 
 
 C_DEPS += \
-./source/GP.d \
-./source/global_definitions.d \
 ./source/mtb.d \
 ./source/semihost_hardfault.d \
-./source/sensor_driver.d \
-./source/sensor_task.d \
-./source/water_level_isr.d 
+./source/sensor.d 
 
 OBJS += \
-./source/GP.o \
-./source/global_definitions.o \
 ./source/mtb.o \
 ./source/semihost_hardfault.o \
-./source/sensor_driver.o \
-./source/sensor_task.o \
-./source/water_level_isr.o 
+./source/sensor.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -43,7 +31,7 @@ source/%.o: ../source/%.c source/subdir.mk
 clean: clean-source
 
 clean-source:
-	-$(RM) ./source/GP.d ./source/GP.o ./source/global_definitions.d ./source/global_definitions.o ./source/mtb.d ./source/mtb.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o ./source/sensor_driver.d ./source/sensor_driver.o ./source/sensor_task.d ./source/sensor_task.o ./source/water_level_isr.d ./source/water_level_isr.o
+	-$(RM) ./source/mtb.d ./source/mtb.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o ./source/sensor.d ./source/sensor.o
 
 .PHONY: clean-source
 
