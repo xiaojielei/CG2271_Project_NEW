@@ -10,8 +10,13 @@
 #include "semphr.h"
 #include "queue.h"
 
+#include "actuator_driver.h"
+
 #define WATER_LEVEL_PIN       0  // PTC0
 #define PHOTORESISTOR_PIN     22 // PTE22
+
+#define LEDPIN 1 //PTC1
+#define BUZZERPIN 2 //PTC2
 
 typedef struct {
     uint32_t water_level;      // 0-100%
@@ -79,12 +84,29 @@ uint32_t ReadPhotoresistor() {
     return ADC0->R[1];
 }
 
+uint32_t water_level_dry = 0;    // ADC value when dry
+uint32_t water_level_wet = 4095; // ADC value when fully submerged
+ uint32_t photoresistor_dark = 0;
+ uint32_t photoresistor_bright = 4095;
+
 void ADC0_IRQHandler(void) {
 	NVIC_ClearPendingIRQ(ADC0_IRQn);
     BaseType_t hpw = pdFALSE;
 
     if (ADC0->SC1[0] & ADC_SC1_COCO_MASK) {
-        sensorData.water_level = ADC0->R[0];
+        int adcValue = ADC0->R[0];
+        int waterLevelPercent = 0;
+
+        if (adcValue <= water_level_dry) {
+            waterLevelPercent = 0;
+        } else if (adcValue >= water_level_wet) {
+            waterLevelPercent = 100;
+        } else {
+            waterLevelPercent = (adcValue - water_level_dry) * 100 / (water_level_wet - water_level_dry);
+        }
+
+        sensorData.water_level = waterLevelPercent;
+
         xSemaphoreGiveFromISR(xWaterLevelSemaphore, &hpw);
         portYIELD_FROM_ISR(hpw);
 
@@ -101,6 +123,21 @@ void Sensor_Task(void *pvParameters) {
     }
 }
 
+void Actuator_Task() {
+	while (1) {
+		SDK_DelayAtLeastUs(10000U, SystemCoreClock);
+		Set_LED_Intensity(sensorData.light_intensity);
+
+		//TODO: Add DHt11 data into below condition
+//		if (sensorData.water_level >= water_level_wet && sensorData.light_intensity >= photoresistor_bright) {
+//			Play_Music(MUSIC_SAD);
+//		} else {
+			Play_Music(MUSIC_HAPPY);
+//		}
+		vTaskDelay(pdMS_TO_TICKS(2000));
+	}
+}
+
 int main(void) {
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
@@ -113,12 +150,21 @@ int main(void) {
     sensorData.temperature = 0;
     sensorData. humidity = 0;
 
-
+    //Init
+    Actuators_Init();
+	SDK_DelayAtLeastUs(10000U, SystemCoreClock);
+	Set_LED_Intensity(255);
+	Play_Music(MUSIC_HAPPY);
     initSensors();
-    xTaskCreate(Sensor_Task, "SensorTask", configMINIMAL_STACK_SIZE + 256, NULL, 0, NULL);
-    vTaskStartScheduler();
 
+    //Taks creation
+    xTaskCreate(Actuator_Task, "ActuatorTask", configMINIMAL_STACK_SIZE + 256, NULL, 1, NULL);
+    xTaskCreate(Sensor_Task, "SensorTask", configMINIMAL_STACK_SIZE + 256, NULL, 2, NULL);
+
+    //start executing
+    vTaskStartScheduler();
     while (1);
 
+    //end executing
     return 0;
 }

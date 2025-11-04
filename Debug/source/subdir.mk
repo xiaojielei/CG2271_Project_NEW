@@ -4,17 +4,23 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../source/actuator_driver.c \
 ../source/mtb.c \
+../source/music_library.c \
 ../source/semihost_hardfault.c \
 ../source/sensor.c 
 
 C_DEPS += \
+./source/actuator_driver.d \
 ./source/mtb.d \
+./source/music_library.d \
 ./source/semihost_hardfault.d \
 ./source/sensor.d 
 
 OBJS += \
+./source/actuator_driver.o \
 ./source/mtb.o \
+./source/music_library.o \
 ./source/semihost_hardfault.o \
 ./source/sensor.o 
 
@@ -31,7 +37,7 @@ source/%.o: ../source/%.c source/subdir.mk
 clean: clean-source
 
 clean-source:
-	-$(RM) ./source/mtb.d ./source/mtb.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o ./source/sensor.d ./source/sensor.o
+	-$(RM) ./source/actuator_driver.d ./source/actuator_driver.o ./source/mtb.d ./source/mtb.o ./source/music_library.d ./source/music_library.o ./source/semihost_hardfault.d ./source/semihost_hardfault.o ./source/sensor.d ./source/sensor.o
 
 .PHONY: clean-source
 

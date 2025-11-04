@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ACTUATOR_DRIVER_H_
+#define ACTUATOR_DRIVER_H_
+
 #include <stdint.h>
 
 typedef enum {
@@ -8,7 +10,8 @@ typedef enum {
     MUSIC_ALERT
 } MusicType_t;
 
-
 void Actuators_Init(void);
 void Set_LED_Intensity(uint8_t intensity_0_255);
 void Play_Music(MusicType_t music_type);
+
+#endif
