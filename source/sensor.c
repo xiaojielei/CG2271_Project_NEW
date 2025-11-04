@@ -65,7 +65,6 @@ void initSensors(void) {
     // Use VALTH and VALTL
     ADC0->SC2 &= ~ADC_SC2_REFSEL_MASK;
     ADC0->SC2 |= ADC_SC2_REFSEL(0b01);
-
     // Don't use averaging
     ADC0->SC3 &= ~ADC_SC3_AVGE_MASK;
     ADC0->SC3 |= ADC_SC3_AVGE(0);
