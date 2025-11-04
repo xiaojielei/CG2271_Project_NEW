@@ -1,7 +1,7 @@
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\CMSIS/core_cm0plus.h:757:22:__NVIC_EnableIRQ	16	static
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\CMSIS/core_cm0plus.h:795:22:__NVIC_DisableIRQ	16	static
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\CMSIS/core_cm0plus.h:848:22:__NVIC_ClearPendingIRQ	16	static
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\CMSIS/core_cm0plus.h:866:22:__NVIC_SetPriority	24	static
+/Users/joyliu/Desktop/code/CG2271_Project_NEW/CMSIS/core_cm0plus.h:757:22:__NVIC_EnableIRQ	16	static
+/Users/joyliu/Desktop/code/CG2271_Project_NEW/CMSIS/core_cm0plus.h:795:22:__NVIC_DisableIRQ	16	static
+/Users/joyliu/Desktop/code/CG2271_Project_NEW/CMSIS/core_cm0plus.h:848:22:__NVIC_ClearPendingIRQ	16	static
+/Users/joyliu/Desktop/code/CG2271_Project_NEW/CMSIS/core_cm0plus.h:866:22:__NVIC_SetPriority	24	static
 ../source/sensor.c:32:6:initSensors	8	static
 ../source/sensor.c:80:10:ReadPhotoresistor	8	static
 ../source/sensor.c:92:6:ADC0_IRQHandler	24	static
