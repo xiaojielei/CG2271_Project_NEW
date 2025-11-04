@@ -2,7 +2,6 @@
 #include "pin_mux.h"
 #include "fsl_common.h"
 #include "fsl_clock.h"
-
 #include "actuator_driver.h"
 #define LED_PIN_PTC   1u
 int main(void)
