@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include "board.h"
 #include "peripherals.h"
 #include "pin_mux.h"
@@ -13,17 +14,18 @@
 #include "actuator_driver.h"
 
 #define WATER_LEVEL_PIN       0  // PTC0
-#define PHOTORESISTOR_PIN     22 // PTE22
+#define PHOTORESISTOR_PIN     20 // PTE20
 
 #define LEDPIN 1 //PTC1
 #define BUZZERPIN 2 //PTC2
 
 typedef struct {
-    uint32_t water_level;      // 0-100%
-    uint32_t light_intensity;  // 0-1023 (ADC value)
-    float temperature;         // Celsius
-    float humidity;            // Percentage
+    uint32_t water_level;     // raw ADC 0..4095
+    uint32_t light_intensity;     // raw ADC 0..4095
+    float temperature;
+    float humidity;
 } SensorData_t;
+
 
 static SemaphoreHandle_t xWaterLevelSemaphore;
 SensorData_t sensorData;
@@ -40,7 +42,7 @@ void initSensors(void) {
     SIM->SCGC5 |= SIM_SCGC5_PORTE_MASK;
     SIM->SCGC5 |= SIM_SCGC5_PORTC_MASK;
 
-    // Configure photoresistor ADC pin (PTE22 - ADC0_SE3)
+    // Configure photoresistor ADC pin (PTE20 - ADC0_SE3)
     PORTE->PCR[PHOTORESISTOR_PIN] &= ~PORT_PCR_MUX_MASK;
     PORTE->PCR[PHOTORESISTOR_PIN] |= PORT_PCR_MUX(0);
 
@@ -49,7 +51,7 @@ void initSensors(void) {
 	PORTC->PCR[WATER_LEVEL_PIN] |= PORT_PCR_MUX(0);
 
 	// Configure the ADC, Enable ADC interrupt
-	ADC0->SC1[0] |= ADC_SC1_AIEN_MASK | ADC_SC1_ADCH(14);// Start interrupt-based conversion on channel 14 (PTC0)
+	//ADC0->SC1[0] = ADC_SC1_AIEN_MASK | ADC_SC1_ADCH(14);// Start interrupt-based conversion on channel 14 (PTC0)
 	ADC0->SC1[0] &= ~ADC_SC1_DIFF_MASK;
 	ADC0->SC1[0] |= ADC_SC1_DIFF(0b0);
 
@@ -63,7 +65,6 @@ void initSensors(void) {
     // Use VALTH and VALTL
     ADC0->SC2 &= ~ADC_SC2_REFSEL_MASK;
     ADC0->SC2 |= ADC_SC2_REFSEL(0b01);
-
     // Don't use averaging
     ADC0->SC3 &= ~ADC_SC3_AVGE_MASK;
     ADC0->SC3 |= ADC_SC3_AVGE(0);
@@ -75,20 +76,29 @@ void initSensors(void) {
     NVIC_SetPriority(ADC0_IRQn, 192);
     NVIC_EnableIRQ(ADC0_IRQn);
 }
+static inline uint32_t adc_read_blocking(uint8_t ch) {
+    // wait until converter is idle
+    while (ADC0->SC2 & ADC_SC2_ADACT_MASK) { }
+    // start conversion on SC1[0] with AIEN=0
+    ADC0->SC1[0] = (ADC0->SC1[0] & ~(ADC_SC1_ADCH_MASK | ADC_SC1_AIEN_MASK)) | ADC_SC1_ADCH(ch);
+    while (!(ADC0->SC1[0] & ADC_SC1_COCO_MASK)) { }
+    return ADC0->R[0];
+}
 
 // Read by polling
 uint32_t ReadPhotoresistor() {
     ADC0->SC1[1] &= ~ADC_SC1_ADCH_MASK;
-    ADC0->SC1[1] |= ADC_SC1_ADCH(3); //starts conversion
-    while (!(ADC0->SC1[1] & ADC_SC1_COCO_MASK)) {}
+    ADC0->SC1[1] |= ADC_SC1_ADCH(0); //starts conversion
+    //while (!(ADC0->SC1[1] & ADC_SC1_COCO_MASK)) {}
     return ADC0->R[1];
 }
 
-uint32_t water_level_dry = 0;    // ADC value when dry
-uint32_t water_level_wet = 4095; // ADC value when fully submerged
- uint32_t photoresistor_dark = 0;
- uint32_t photoresistor_bright = 4095;
+uint32_t water_level_dry = 200;    // ADC value when dry ori 0
+uint32_t water_level_wet = 1800;   // ADC value when fully submerged ori 4095
+uint32_t photoresistor_dark = 1800;
+uint32_t photoresistor_bright = 500;
 
+ /*
 void ADC0_IRQHandler(void) {
 	NVIC_ClearPendingIRQ(ADC0_IRQn);
     BaseType_t hpw = pdFALSE;
@@ -114,7 +124,23 @@ void ADC0_IRQHandler(void) {
         ADC0->SC1[0] = ADC_SC1_AIEN_MASK | ADC_SC1_ADCH(14);
     }
 }
+*/
+ void ADC0_IRQHandler(void) {
+     NVIC_ClearPendingIRQ(ADC0_IRQn);
+     BaseType_t hpw = pdFALSE;
 
+     if (ADC0->SC1[0] & ADC_SC1_COCO_MASK) {
+         uint32_t adcValue = ADC0->R[0];
+         sensorData.water_level = adcValue;     // store RAW
+
+         xSemaphoreGiveFromISR(xWaterLevelSemaphore, &hpw);
+         portYIELD_FROM_ISR(hpw);
+
+         // restart conversion on channel 14 (PTC0)
+         //ADC0->SC1[0] = ADC_SC1_AIEN_MASK | ADC_SC1_ADCH(14);
+     }
+ }
+/*
 void Sensor_Task(void *pvParameters) {
     while (1) {
         sensorData.light_intensity = ReadPhotoresistor();
@@ -122,20 +148,73 @@ void Sensor_Task(void *pvParameters) {
         vTaskDelay(pdMS_TO_TICKS(2000));
     }
 }
+void Sensor_Task(void *pvParameters) {
+     while (1) {
+         sensorData.light_adc = ReadPhotoresistor();
+         PRINTF("water_adc: %u, light_adc: %u\r\n",
+                (unsigned)sensorData.water_adc,
+                (unsigned)sensorData.light_adc);
+         vTaskDelay(pdMS_TO_TICKS(2000));
+     }
+ }*/
+ void Sensor_Task(void *pvParameters) {
+     (void)pvParameters;
+     for (;;) {
+         // 1) Start water (PTC0 = ADC0_SE14) with interrupt enabled
+         while (ADC0->SC2 & ADC_SC2_ADACT_MASK) { }
+         ADC0->SC1[0] = (ADC0->SC1[0] & ~ADC_SC1_ADCH_MASK) | ADC_SC1_AIEN_MASK | ADC_SC1_ADCH(14);
 
+         // 2) Wait for ISR to signal completion
+         xSemaphoreTake(xWaterLevelSemaphore, pdMS_TO_TICKS(10)); // small timeout ok
+
+         // 3) Read light (PTE20 = ADC0_SE0) with blocking, no interrupt
+         sensorData.light_intensity = adc_read_blocking(0);
+
+         // 4) Print actual values
+         PRINTF("water_adc: %u, light_adc: %u\r\n",
+                (unsigned)sensorData.water_level,
+                (unsigned)sensorData.light_intensity);
+
+         vTaskDelay(pdMS_TO_TICKS(200)); // ~5 Hz
+     }
+ }
+
+/*
 void Actuator_Task() {
 	while (1) {
 		SDK_DelayAtLeastUs(10000U, SystemCoreClock);
 		Set_LED_Intensity(sensorData.light_intensity);
 
 		//TODO: Add DHt11 data into below condition
-//		if (sensorData.water_level >= water_level_wet && sensorData.light_intensity >= photoresistor_bright) {
-//			Play_Music(MUSIC_SAD);
-//		} else {
-			Play_Music(MUSIC_HAPPY);
-//		}
+		if (sensorData.water_level >= water_level_wet && sensorData.light_intensity >= photoresistor_bright) {
+			Play_Music(MUSIC_SAD);
+		} else {
+			PRINTF("HAPPYMUSIC");
+			//Play_Music(MUSIC_HAPPY);
+		}
 		vTaskDelay(pdMS_TO_TICKS(2000));
 	}
+}*/
+
+void Actuator_Task(void *pvParameters) {
+    (void)pvParameters;
+    while (1) {
+        SDK_DelayAtLeastUs(10000U, SystemCoreClock);
+
+        // Map 0..4095 ADC to 0..255 PWM (adjust if your driver expects a different range)
+        Set_LED_Intensity((sensorData.light_intensity * 255) / 4095);
+
+        bool water_is_wet   = (sensorData.water_level    >= water_level_wet);
+        bool light_is_bright= (sensorData.light_intensity <= photoresistor_bright);
+
+        if (water_is_wet && light_is_bright) {
+            Play_Music(MUSIC_HAPPY);
+        } else {
+            Play_Music(MUSIC_SAD);
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(2000));
+    }
 }
 
 int main(void) {
@@ -152,12 +231,10 @@ int main(void) {
 
     //Init
     Actuators_Init();
-	SDK_DelayAtLeastUs(10000U, SystemCoreClock);
-	Set_LED_Intensity(255);
-	Play_Music(MUSIC_HAPPY);
-    initSensors();
 
-    //Taks creation
+    initSensors();
+    sensorData.light_intensity = ReadPhotoresistor();
+    //Task creation
     xTaskCreate(Actuator_Task, "ActuatorTask", configMINIMAL_STACK_SIZE + 256, NULL, 1, NULL);
     xTaskCreate(Sensor_Task, "SensorTask", configMINIMAL_STACK_SIZE + 256, NULL, 2, NULL);
 
