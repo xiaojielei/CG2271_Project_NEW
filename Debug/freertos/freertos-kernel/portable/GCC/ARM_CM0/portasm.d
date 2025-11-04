@@ -2,24 +2,24 @@ freertos/freertos-kernel/portable/GCC/ARM_CM0/portasm.o \
  freertos/freertos-kernel/portable/GCC/ARM_CM0/portasm.d: \
  ../freertos/freertos-kernel/portable/GCC/ARM_CM0/portasm.c \
  ../freertos/freertos-kernel/portable/GCC/ARM_CM0/portasm.h \
- C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/FreeRTOS.h \
- C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\template/FreeRTOSConfig.h \
- C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\template\ARM_CM0/FreeRTOSConfig_Gen.h \
- C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/projdefs.h \
- C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/portable.h \
- C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/deprecated_definitions.h \
- C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\portable\GCC\ARM_CM0/portmacro.h \
- C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/mpu_wrappers.h \
- C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/mpu_wrappers.h \
- C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/mpu_syscall_numbers.h
+ /Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/include/FreeRTOS.h \
+ /Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/template/FreeRTOSConfig.h \
+ /Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/template/ARM_CM0/FreeRTOSConfig_Gen.h \
+ /Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/include/projdefs.h \
+ /Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/include/portable.h \
+ /Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/include/deprecated_definitions.h \
+ /Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/portable/GCC/ARM_CM0/portmacro.h \
+ /Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/include/mpu_wrappers.h \
+ /Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/include/mpu_wrappers.h \
+ /Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/include/mpu_syscall_numbers.h
 ../freertos/freertos-kernel/portable/GCC/ARM_CM0/portasm.h:
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/FreeRTOS.h:
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\template/FreeRTOSConfig.h:
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\template\ARM_CM0/FreeRTOSConfig_Gen.h:
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/projdefs.h:
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/portable.h:
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/deprecated_definitions.h:
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\portable\GCC\ARM_CM0/portmacro.h:
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/mpu_wrappers.h:
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/mpu_wrappers.h:
-C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/mpu_syscall_numbers.h:
+/Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/include/FreeRTOS.h:
+/Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/template/FreeRTOSConfig.h:
+/Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/template/ARM_CM0/FreeRTOSConfig_Gen.h:
+/Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/include/projdefs.h:
+/Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/include/portable.h:
+/Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/include/deprecated_definitions.h:
+/Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/portable/GCC/ARM_CM0/portmacro.h:
+/Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/include/mpu_wrappers.h:
+/Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/include/mpu_wrappers.h:
+/Users/joyliu/Desktop/code/CG2271_Project_NEW/freertos/freertos-kernel/include/mpu_syscall_numbers.h:
