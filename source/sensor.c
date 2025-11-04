@@ -195,7 +195,6 @@ void Actuator_Task(void *pvParameters) {
     (void)pvParameters;
     SensorData_t dataSnapshot = {0};
     while (1) {
-        SDK_DelayAtLeastUs(10000U, SystemCoreClock);
 
         if (gSensorData && xSensorDataMutex) {
             if (xSemaphoreTake(xSensorDataMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
