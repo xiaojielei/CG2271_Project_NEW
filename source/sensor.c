@@ -14,7 +14,7 @@
 #include "actuator_driver.h"
 
 #define WATER_LEVEL_PIN       0  // PTC0
-#define PHOTORESISTOR_PIN     22 // PTE22
+#define PHOTORESISTOR_PIN     20 // PTE20 old was PTE22
 
 #define LEDPIN 1 //PTC1
 #define BUZZERPIN 2 //PTC2
@@ -65,6 +65,7 @@ void initSensors(void) {
     // Use VALTH and VALTL
     ADC0->SC2 &= ~ADC_SC2_REFSEL_MASK;
     ADC0->SC2 |= ADC_SC2_REFSEL(0b01);
+
     // Don't use averaging
     ADC0->SC3 &= ~ADC_SC3_AVGE_MASK;
     ADC0->SC3 |= ADC_SC3_AVGE(0);
@@ -88,15 +89,15 @@ static inline uint32_t adc_read_blocking(uint8_t ch) {
 // Read by polling
 uint32_t ReadPhotoresistor() {
     ADC0->SC1[1] &= ~ADC_SC1_ADCH_MASK;
-    ADC0->SC1[1] |= ADC_SC1_ADCH(3); //starts conversion
+    ADC0->SC1[1] |= ADC_SC1_ADCH(0); //starts conversion
     //while (!(ADC0->SC1[1] & ADC_SC1_COCO_MASK)) {}
     return ADC0->R[1];
 }
 
 uint32_t water_level_dry = 200;    // ADC value when dry ori 0
 uint32_t water_level_wet = 1800;   // ADC value when fully submerged ori 4095
-uint32_t photoresistor_dark = 1800;
-uint32_t photoresistor_bright = 500;
+uint32_t photoresistor_dark = 10; //1800
+uint32_t photoresistor_bright = 5; //500
 
  /*
 void ADC0_IRQHandler(void) {
@@ -168,7 +169,7 @@ void Sensor_Task(void *pvParameters) {
          xSemaphoreTake(xWaterLevelSemaphore, pdMS_TO_TICKS(10)); // small timeout ok
 
          // 3) Read light (PTE22 = ADC0_SE3) with blocking, no interrupt
-         sensorData.light_intensity = adc_read_blocking(3);
+         sensorData.light_intensity = adc_read_blocking(0);
 
          // 4) Print actual values
          PRINTF("water_adc: %u, light_adc: %u\r\n",
