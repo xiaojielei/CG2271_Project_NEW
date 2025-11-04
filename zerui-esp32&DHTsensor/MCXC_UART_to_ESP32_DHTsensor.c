@@ -3,17 +3,6 @@
  * @brief   UART2 FreeRTOS example – Communicates with ESP32 DHT bridge
  */
 
-#include <stdio.h>
-#include "board.h"
-#include "peripherals.h"
-#include "pin_mux.h"
-#include "clock_config.h"
-#include "fsl_debug_console.h"
-#include <string.h>
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-
 #define BAUD_RATE 9600
 #define UART_TX_PTE22 22
 #define UART_RX_PTE23 23
