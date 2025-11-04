@@ -65,6 +65,17 @@ void drawOLED() {
   else
     oledPrintLine(48, 48, "--.-C --.-%%");
 
+  if (!isnan(dhtTemp) && dhtTemp > 30.0f) {
+    int16_t centerX = 104;
+    int16_t centerY = 24;
+    int16_t radius = 10;
+    display.drawCircle(centerX, centerY, radius, SSD1306_WHITE);
+    display.fillCircle(centerX - 4, centerY - 3, 2, SSD1306_WHITE);
+    display.fillCircle(centerX + 4, centerY - 3, 2, SSD1306_WHITE);
+    display.drawLine(centerX - 4, centerY + 4, centerX + 4, centerY + 4,
+                     SSD1306_WHITE);
+  }
+
   // Ages (seconds since last updates) — small hint for freshness
   uint32_t now = millis();
   uint32_t ageDht = (lastDhtReadMs ? (now - lastDhtReadMs) / 1000 : 9999);
