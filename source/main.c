@@ -1,5 +1,5 @@
 // main.c
-#include project_config.h
+#include "project_config.h"
 #include "board.h"
 #include "peripherals.h"
 #include "pin_mux.h"
