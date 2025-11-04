@@ -1,7 +1,6 @@
-component/serial_manager/fsl_component_serial_manager.o \
- component/serial_manager/fsl_component_serial_manager.d: \
- ../component/serial_manager/fsl_component_serial_manager.c \
- ../component/serial_manager/fsl_component_serial_manager.h \
+source/CG2271UART.o source/CG2271UART.d: ../source/CG2271UART.c \
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\board/board.h \
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\board/clock_config.h \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_common.h \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\device/fsl_device_registers.h \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\device/MCXC444.h \
@@ -50,7 +49,13 @@ component/serial_manager/fsl_component_serial_manager.o \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_common_arm.h \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_clock.h \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_common.h \
- ../component/serial_manager/fsl_component_serial_port_uart.h \
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_gpio.h \
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\board/peripherals.h \
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\board/pin_mux.h \
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\board/clock_config.h \
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\utilities\debug_console/fsl_debug_console.h \
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\component\serial_manager/fsl_component_serial_manager.h \
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\component\serial_manager/fsl_component_serial_port_uart.h \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\component\uart/fsl_adapter_uart.h \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/FreeRTOS.h \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\template/FreeRTOSConfig.h \
@@ -60,8 +65,15 @@ component/serial_manager/fsl_component_serial_manager.o \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/deprecated_definitions.h \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\portable\GCC\ARM_CM0/portmacro.h \
  C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/mpu_wrappers.h \
- ../component/serial_manager/fsl_component_serial_port_internal.h
-../component/serial_manager/fsl_component_serial_manager.h:
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/task.h \
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/list.h \
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/queue.h \
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/task.h \
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/semphr.h \
+ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/queue.h \
+ ../source/sensor.h ../source/uart_bridge.h
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\board/board.h:
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\board/clock_config.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_common.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\device/fsl_device_registers.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\device/MCXC444.h:
@@ -110,7 +122,13 @@ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\device\periph2/PERI
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_common_arm.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_clock.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_common.h:
-../component/serial_manager/fsl_component_serial_port_uart.h:
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\drivers/fsl_gpio.h:
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\board/peripherals.h:
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\board/pin_mux.h:
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\board/clock_config.h:
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\utilities\debug_console/fsl_debug_console.h:
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\component\serial_manager/fsl_component_serial_manager.h:
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\component\serial_manager/fsl_component_serial_port_uart.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\component\uart/fsl_adapter_uart.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/FreeRTOS.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\template/FreeRTOSConfig.h:
@@ -120,4 +138,11 @@ C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-k
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/deprecated_definitions.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\portable\GCC\ARM_CM0/portmacro.h:
 C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/mpu_wrappers.h:
-../component/serial_manager/fsl_component_serial_port_internal.h:
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/task.h:
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/list.h:
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/queue.h:
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/task.h:
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/semphr.h:
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\freertos\freertos-kernel\include/queue.h:
+../source/sensor.h:
+../source/uart_bridge.h:

@@ -1,0 +1,15 @@
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\CMSIS/core_cm0plus.h:757:22:__NVIC_EnableIRQ	16	static
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\CMSIS/core_cm0plus.h:795:22:__NVIC_DisableIRQ	16	static
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\CMSIS/core_cm0plus.h:848:22:__NVIC_ClearPendingIRQ	16	static
+C:\Users\86178\Documents\MCUXpressoIDE_25.6.136\workspace\GP\CMSIS/core_cm0plus.h:866:22:__NVIC_SetPriority	24	static
+../source/CG2271UART.c:47:6:UART_Bridge_Init	16	static
+../source/CG2271UART.c:61:6:UART_Bridge_SetSensorDataHandle	16	static
+../source/CG2271UART.c:67:6:UART_Bridge_StartTasks	24	static
+../source/CG2271UART.c:74:12:UART_Bridge_Send	16	static
+../source/CG2271UART.c:79:12:UART_Bridge_SendSensorTelemetry	160	static
+../source/CG2271UART.c:96:13:initUART2	24	static
+../source/CG2271UART.c:121:19:uart_send_locked	24	static
+../source/CG2271UART.c:144:6:UART2_FLEXIO_IRQHandler	144	static
+../source/CG2271UART.c:170:13:uart_receive_task	152	static
+../source/CG2271UART.c:182:13:uart_request_task	16	static
+../source/CG2271UART.c:191:13:handle_incoming_payload	48	static
