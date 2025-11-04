@@ -15,7 +15,6 @@
 #define _F5  698
 #define _G5  784
 #define _A5  880
-
 #define REST 0
 
 // --- “Happy” (cheery) short fanfare-style riff (public-domain friendly) ---

@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+ 
 /**
  * @file    mtb.c
  * @brief   MTB initialization file.
