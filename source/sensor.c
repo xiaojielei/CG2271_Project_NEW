@@ -1,37 +1,35 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
+
 #include "board.h"
 #include "peripherals.h"
 #include "pin_mux.h"
 #include "clock_config.h"
 #include "fsl_debug_console.h"
 #include "fsl_port.h"
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
-#include "queue.h"
 
 #include "actuator_driver.h"
+#include "sensor.h"
+#include "uart_bridge.h"
 
-#define WATER_LEVEL_PIN       0  // PTC0
-#define PHOTORESISTOR_PIN     20 // PTE20 old was PTE22
+#define WATER_LEVEL_PIN       0u  // PTC0 -> ADC0_SE14
+#define PHOTORESISTOR_PIN     20u // PTE20 -> ADC0_SE0
 
-#define LEDPIN 1 //PTC1
-#define BUZZERPIN 2 //PTC2
-
-typedef struct {
-    uint32_t water_level;     // raw ADC 0..4095
-    uint32_t light_intensity;     // raw ADC 0..4095
-    float temperature;
-    float humidity;
-} SensorData_t;
-
+static const uint32_t kWaterLevelWetThreshold    = 1800u;
+static const uint32_t kPhotoresistorBrightLimit  = 5u;
 
 static SemaphoreHandle_t xWaterLevelSemaphore;
-SensorData_t sensorData;
+static SemaphoreHandle_t xSensorDataMutex;
+static SensorData_t *gSensorData;
+static volatile uint32_t gLatestWaterLevel;
 
 //Init both sensors
-void initSensors(void) {
+static void initSensors(void) {
 	NVIC_DisableIRQ(ADC0_IRQn);
 	NVIC_ClearPendingIRQ(ADC0_IRQn);
 
@@ -71,8 +69,8 @@ void initSensors(void) {
     ADC0->SC3 |= ADC_SC3_AVGE(0);
 
     // Use continuous conversion
-    ADC0->SC3 &= ~ADC_SC3_ADCO_MASK;
-    ADC0->SC3 |= ADC_SC3_ADCO(0);
+	ADC0->SC3 &= ~ADC_SC3_ADCO_MASK;
+	ADC0->SC3 |= ADC_SC3_ADCO(0);
 
     NVIC_SetPriority(ADC0_IRQn, 192);
     NVIC_EnableIRQ(ADC0_IRQn);
@@ -86,53 +84,27 @@ static inline uint32_t adc_read_blocking(uint8_t ch) {
     return ADC0->R[0];
 }
 
-// Read by polling
-uint32_t ReadPhotoresistor() {
-    ADC0->SC1[1] &= ~ADC_SC1_ADCH_MASK;
-    ADC0->SC1[1] |= ADC_SC1_ADCH(0); //starts conversion
-    //while (!(ADC0->SC1[1] & ADC_SC1_COCO_MASK)) {}
-    return ADC0->R[1];
-}
-
-uint32_t water_level_dry = 200;    // ADC value when dry ori 0
-uint32_t water_level_wet = 1800;   // ADC value when fully submerged ori 4095
-uint32_t photoresistor_dark = 10; //1800
-uint32_t photoresistor_bright = 5; //500
-
- /*
-void ADC0_IRQHandler(void) {
-	NVIC_ClearPendingIRQ(ADC0_IRQn);
-    BaseType_t hpw = pdFALSE;
-
-    if (ADC0->SC1[0] & ADC_SC1_COCO_MASK) {
-        int adcValue = ADC0->R[0];
-        int waterLevelPercent = 0;
-
-        if (adcValue <= water_level_dry) {
-            waterLevelPercent = 0;
-        } else if (adcValue >= water_level_wet) {
-            waterLevelPercent = 100;
-        } else {
-            waterLevelPercent = (adcValue - water_level_dry) * 100 / (water_level_wet - water_level_dry);
-        }
-
-        sensorData.water_level = waterLevelPercent;
-
-        xSemaphoreGiveFromISR(xWaterLevelSemaphore, &hpw);
-        portYIELD_FROM_ISR(hpw);
-
-        // Restart the interrupt-driven conversion
-        ADC0->SC1[0] = ADC_SC1_AIEN_MASK | ADC_SC1_ADCH(14);
+void Sensors_Init(SensorData_t *sharedData, SemaphoreHandle_t dataMutex) {
+    gSensorData = sharedData;
+    xSensorDataMutex = dataMutex;
+    if (gSensorData) {
+        memset(gSensorData, 0, sizeof(*gSensorData));
     }
+
+    xWaterLevelSemaphore = xSemaphoreCreateBinary();
+    configASSERT(xWaterLevelSemaphore != NULL);
+
+    gLatestWaterLevel = 0u;
+    initSensors();
 }
-*/
+
  void ADC0_IRQHandler(void) {
      NVIC_ClearPendingIRQ(ADC0_IRQn);
      BaseType_t hpw = pdFALSE;
 
      if (ADC0->SC1[0] & ADC_SC1_COCO_MASK) {
          uint32_t adcValue = ADC0->R[0];
-         sensorData.water_level = adcValue;     // store RAW
+         gLatestWaterLevel = adcValue;
 
          xSemaphoreGiveFromISR(xWaterLevelSemaphore, &hpw);
          portYIELD_FROM_ISR(hpw);
@@ -160,6 +132,7 @@ void Sensor_Task(void *pvParameters) {
  }*/
  void Sensor_Task(void *pvParameters) {
      (void)pvParameters;
+     TickType_t lastTelemetryTick = xTaskGetTickCount();
      for (;;) {
          // 1) Start water (PTC0 = ADC0_SE14) with interrupt enabled
          while (ADC0->SC2 & ADC_SC2_ADACT_MASK) { }
@@ -169,12 +142,34 @@ void Sensor_Task(void *pvParameters) {
          xSemaphoreTake(xWaterLevelSemaphore, pdMS_TO_TICKS(10)); // small timeout ok
 
          // 3) Read light (PTE22 = ADC0_SE3) with blocking, no interrupt
-         sensorData.light_intensity = adc_read_blocking(0);
+         uint32_t lightRaw = adc_read_blocking(0);
+         uint32_t waterRaw = gLatestWaterLevel;
+
+         if (gSensorData && xSensorDataMutex) {
+             if (xSemaphoreTake(xSensorDataMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
+                 gSensorData->water_level = waterRaw;
+                 gSensorData->light_intensity = lightRaw;
+                 xSemaphoreGive(xSensorDataMutex);
+             }
+         }
 
          // 4) Print actual values
          PRINTF("water_adc: %u, light_adc: %u\r\n",
-                (unsigned)sensorData.water_level,
-                (unsigned)sensorData.light_intensity);
+                (unsigned)waterRaw,
+                (unsigned)lightRaw);
+
+         if (gSensorData && xSensorDataMutex) {
+             TickType_t now = xTaskGetTickCount();
+             if ((now - lastTelemetryTick) >= pdMS_TO_TICKS(2000)) {
+                 SensorData_t snapshot;
+                 if (xSemaphoreTake(xSensorDataMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
+                     snapshot = *gSensorData;
+                     xSemaphoreGive(xSensorDataMutex);
+                     UART_Bridge_SendSensorTelemetry(&snapshot);
+                 }
+                 lastTelemetryTick = now;
+             }
+         }
 
          vTaskDelay(pdMS_TO_TICKS(200)); // ~5 Hz
      }
@@ -199,14 +194,23 @@ void Actuator_Task() {
 
 void Actuator_Task(void *pvParameters) {
     (void)pvParameters;
+    SensorData_t dataSnapshot = {0};
     while (1) {
         SDK_DelayAtLeastUs(10000U, SystemCoreClock);
 
-        // Map 0..4095 ADC to 0..255 PWM (adjust if your driver expects a different range)
-        Set_LED_Intensity((sensorData.light_intensity * 255) / 4095);
+        if (gSensorData && xSensorDataMutex) {
+            if (xSemaphoreTake(xSensorDataMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
+                dataSnapshot = *gSensorData;
+                xSemaphoreGive(xSensorDataMutex);
+            }
+        }
 
-        bool water_is_wet   = (sensorData.water_level    >= water_level_wet);
-        bool light_is_bright= (sensorData.light_intensity <= photoresistor_bright);
+        // Map 0..4095 ADC to 0..255 PWM
+        uint32_t pwmValue = (dataSnapshot.light_intensity * 255u) / 4095u;
+        Set_LED_Intensity((uint8_t)pwmValue);
+
+        bool water_is_wet   = (dataSnapshot.water_level    >= kWaterLevelWetThreshold);
+        bool light_is_bright= (dataSnapshot.light_intensity <= kPhotoresistorBrightLimit);
 
         if (water_is_wet && light_is_bright) {
             Play_Music(MUSIC_HAPPY);
@@ -218,31 +222,14 @@ void Actuator_Task(void *pvParameters) {
     }
 }
 
-int main(void) {
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
-    BOARD_InitDebugConsole();
+void Sensor_UpdateRemoteReadings(float temperature, float humidity) {
+    if (!gSensorData || !xSensorDataMutex) {
+        return;
+    }
 
-    xWaterLevelSemaphore = xSemaphoreCreateBinary();
-    sensorData.water_level = 0;
-    sensorData.light_intensity = 0;
-    sensorData.temperature = 0;
-    sensorData. humidity = 0;
-
-    //Init
-    Actuators_Init();
-
-    initSensors();
-    sensorData.light_intensity = ReadPhotoresistor();
-    //Task creation
-    xTaskCreate(Actuator_Task, "ActuatorTask", configMINIMAL_STACK_SIZE + 256, NULL, 1, NULL);
-    xTaskCreate(Sensor_Task, "SensorTask", configMINIMAL_STACK_SIZE + 256, NULL, 2, NULL);
-
-    //start executing
-    vTaskStartScheduler();
-    while (1);
-
-    //end executing
-    return 0;
+    if (xSemaphoreTake(xSensorDataMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
+        gSensorData->temperature = temperature;
+        gSensorData->humidity = humidity;
+        xSemaphoreGive(xSensorDataMutex);
+    }
 }
