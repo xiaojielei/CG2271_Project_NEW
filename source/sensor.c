@@ -197,7 +197,6 @@ void Actuator_Task(void *pvParameters) {
     (void)pvParameters;
     SensorData_t dataSnapshot = {0};
     while (1) {
-        SDK_DelayAtLeastUs(10000U, SystemCoreClock);
 
         if (gSensorData && xSensorDataMutex) {
             if (xSemaphoreTake(xSensorDataMutex, pdMS_TO_TICKS(10)) == pdTRUE) {
@@ -209,9 +208,9 @@ void Actuator_Task(void *pvParameters) {
         // Map 0..4095 ADC to 0..255 PWM
         uint32_t pwmValue = (dataSnapshot.light_intensity * 255u) / 4095u;
         uint8_t pwm = 0;
-        if (gSensorData->light_intensity <= 5) pwm = 0;
-        else if (gSensorData->light_intensity >= 30) pwm = 255;
-        else pwm = (gSensorData->light_intensity - 5) * 255 / (30 - 5);
+        if (dataSnapshot.light_intensity <= 5) pwm = 0;
+        else if (dataSnapshot.light_intensity >= 30) pwm = 255;
+        else pwm = (dataSnapshot.light_intensity - 5) * 255 / (30 - 5);
 
         Set_LED_Intensity(pwm);
 
